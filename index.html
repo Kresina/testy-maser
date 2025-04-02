@@ -3,36 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anatomie pro maséry</title>
+    <title>Simple Quiz</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="sidebar">
-        <h3>Nastavení testu</h3>
-        <div class="input-group">
-            <label for="numQuestions">Počet náhodných otázek:</label>
-            <input id="numQuestions" type="number" value="5" min="1" />
-        </div>
-        <button id="generateTest">Vygenerovat test</button>
-        <button id="toggleTimer">Spustit test</button>
-        <button id="endTest" disabled>Ukončit test</button>
-        <div id="timerDisplay" class="timer-display">00:00</div>
-        <div id="questionList"></div>
+<div class="sidebar">
+    <h3>Questions</h3>
+    <div id="questionList"></div>
+</div>
+
+<div class="quiz-container">
+    <h2 id="question">Question?</h2>
+    <div id="answers"></div>
+    <div class="nav-buttons">
+        <button id="prev" disabled>Previous</button>
+        <button id="next">Next</button>
     </div>
-    
-    <div class="quiz-container">
-        <div id="question">Otázka?</div>
-        <div id="answers">
-            <button class="answer">Odpověď 1</button>
-            <button class="answer">Odpověď 2</button>
-            <button class="answer">Odpověď 3</button>
-            <button class="answer">Odpověď 4</button>
-        </div>
-        <div class="nav-buttons">
-            <button id="prev" disabled>Předchozí</button>
-            <button id="next" disabled>Další</button>
-        </div>
-    </div>
+</div>
 
 <script src="quizData.js"></script>
 <script src="main.js"></script>
