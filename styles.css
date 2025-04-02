@@ -1,8 +1,11 @@
+/* Obecné nastavení */
 body {
     font-family: Arial, sans-serif;
     display: flex;
     margin: 0;
 }
+
+/* Sidebar */
 .sidebar {
     width: 250px;
     padding: 10px;
@@ -11,53 +14,366 @@ body {
     height: 100vh;
     overflow-y: auto;
 }
+
 .sidebar h3 {
     text-align: center;
 }
+
 .sidebar button {
     display: block;
     width: 100%;
     padding: 10px;
     margin: 5px 0;
     border: none;
-    background-color: #eee;
+    background-color: #f1f1f1;
+    color: #000;
     cursor: pointer;
     text-align: left;
     font-size: 14px;
 }
+
+.sidebar button:hover {
+    background-color: #ddd;
+}
+
+.sidebar button:focus {
+    outline: none;
+}
+
+.sidebar button:active {
+    background-color: #ccc;
+}
+
 .sidebar button.active {
     background-color: #ddd;
+    border: 2px solid #2196f3;
     font-weight: bold;
 }
-.sidebar button.incorrect {
-    background-color: lightcoral;
-}
+
 .sidebar button.correct {
-    background-color: lightgreen;
+    background-color: #4caf50;
 }
+
+.sidebar button.incorrect {
+    background-color: #f44336;
+}
+
+/* Hlavní obsah */
 .quiz-container {
     flex-grow: 1;
     padding: 20px;
-    text-align: center;
 }
-.answer {
-    display: block;
+
+.quiz-container[style="display: none;"] {
+   display: none !important; /* Skrytí oblasti otázek */
+}
+
+#question {
+    font-size: 24px; /* Zvětšení velikosti písma */
+    text-align: center; /* Zarovnání textu na střed */
+    margin-bottom: 20px; /* Mezera mezi otázkou a odpověďmi */
+    font-weight: bold; /* Tučný text pro lepší zvýraznění */
+}
+
+#answers {
+    display: flex; /* Aktivace Flexboxu */
+    flex-direction: column; /* Uspořádání odpovědí ve sloupci */
+    align-items: flex-start; /* Zarovnání všech odpovědí k levému okraji */
+    gap: 10px; /* Mezera mezi odpověďmi */
+    margin-top: 10px; /* Mezera mezi otázkou a odpověďmi */
+}
+
+/* Styl pro jednotlivé odpovědi */
+button.answer {
+    display: block; /* Každá odpověď na samostatném řádku */
+    width: auto; /* Šířka odpovídá délce textu */
+    text-align: left; /* Zarovnání textu vlevo */
+    padding: 10px 15px;
+    border: 2px solid #ccc; /* Světle šedý rámeček */
+    background-color: #f9f9f9; /* Světle šedá výplň */
+    border-radius: 5px; /* Zaoblené rohy */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Plynulý přechod při změně stylu */
+}
+
+/* Hover efekt pro odpovědi */
+button.answer:hover {
+    background-color: #e0e0e0; /* Zvýraznění při najetí myší */
+}
+
+/* Správná odpověď */
+button.answer.correct {
+    background-color: #4caf50; /* Zelená barva */
+    color: white;
+    border-color: #4caf50;
+}
+
+/* Špatná odpověď */
+button.answer.incorrect {
+    background-color: #f44336; /* Červená barva */
+    color: white;
+    border-color: #f44336;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: flex-start; /* Zarovnání vlevo */
+    gap: 10px; /* Mezera mezi tlačítky */
+}
+
+.nav-buttons button {
+    background-color: #ff9800; /* Oranžová barva */
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-buttons button:hover:not(:disabled) {
+    background-color: #e68900; /* Tmavší oranžová při najetí myší */
+}
+
+.nav-buttons button:disabled {
+    background-color: #ccc; /* Šedá barva pro deaktivované tlačítko */
+}
+
+/* Časovač */
+#timerDisplay {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+/* Zvýraznění tlačítka pro vygenerování testu */
+#generateTest {
+    background-color: #007bff; /* Modrá barva pozadí */
+    color: white; /* Bílý text */
+    font-size: 16px; /* Větší text */
+    font-weight: bold; /* Tučný text */
+    padding: 12px 20px; /* Větší vnitřní odsazení */
+    border: none; /* Žádný okraj */
+    border-radius: 5px; /* Zaoblené rohy */
+    cursor: pointer; /* Změna kurzoru na ukazatel */
+    transition: all 0.3s ease; /* Animace při najetí myší */
+}
+
+#generateTest:hover {
+    background-color: #0056b3; /* Tmavší modrá při najetí myší */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Jemný stín při najetí myší */
+}
+
+#generateTest:focus {
+    outline: none; /* Odstranění rámečku při zaostření */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Modrý zářící efekt při zaostření */
+}
+
+#toggleTimer {
+    background-color: #ff9800; /* Oranžová barva */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px; /* Mezera nad tlačítkem */
+}
+
+#toggleTimer:hover {
+    background-color: #e68900; /* Tmavší oranžová při najetí myší */
+}
+
+#toggleTimer:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.5); /* Oranžový zářící efekt při zaostření */
+}
+#countdownDisplay {
+    margin-top: 10px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+#toggleTimer:disabled {
+    background-color: #ccc; /* Šedá barva pro deaktivované tlačítko */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
     padding: 10px;
-    margin: 5px;
+    border-right: 1px solid #ccc;
+    background-color: #f8f8f8;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
     border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Tlačítka v sidebaru */
+#generateTest,
+#toggleTimer {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#generateTest {
+    background-color: #007bff; /* Modrá barva */
+}
+
+#generateTest:hover {
+    background-color: #0056b3; /* Tmavší modrá při najetí myší */
+}
+
+#toggleTimer {
+    background-color: #4CAF50; /* Zelená pro lepší viditelnost */
+    margin-top: 15px;
+}
+
+#toggleTimer:hover {
+    background-color: #45a049;
+}
+/* Stylování pro časovač v sidebaru */
+.timer-display {
+    text-align: center; /* Zarovnání na střed */
+    font-size: 1.5em; /* Zvětšení velikosti fontu */
+    font-weight: bold; /* Tučný text */
+    margin-top: 15px; /* Mezera nad časovačem */
+    color: #333; /* Tmavší text */
+}
+
+.sidebar-question {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    background-color: #f1f1f1;
+    color: #000;
     cursor: pointer;
 }
-.correct { background-color: lightgreen; }
-.incorrect { background-color: lightcoral; }
-.nav-buttons {
-    margin-top: 10px;
+
+.sidebar-question:hover {
+    background-color: #ddd; /* Zvýraznění při najetí */
 }
-#retry {
-    display: none;
-    margin-top: 20px;
-    padding: 10px;
+
+.sidebar-question.correct {
+    background-color: #4caf50; /* Zelená barva pro správnou odpověď */
+    color: white;
+}
+
+.sidebar-question.incorrect {
+    background-color: #f44336; /* Červená barva pro špatnou odpověď */
+    color: white;
+}
+
+#endTest {
+    background-color: #ff5722; /* Oranžovo-červená barva */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px; /* Mezera nad tlačítkem */
+}
+
+#endTest:hover:not(:disabled) {
+    background-color: #e64a19; /* Tmavší oranžovo-červená při najetí myší */
+}
+
+#endTest:disabled {
+    background-color: #ccc; /* Šedá barva pro deaktivované tlačítko */
+}
+
+.sidebar-question.current {
+    background-color: #2196f3; /* Modrá barva pro aktuální otázku */
+    color: white; /* Bílý text */
+    font-weight: bold; /* Tučný text */
+    border-left: 4px solid #0d47a1; /* Modrý pruh vlevo */
+}
+
+.quiz-container h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+}
+
+.quiz-container p {
+    text-align: center;
+    font-size: 18px;
+}
+
+.quiz-container button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
     background-color: #007bff;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+}
+
+.quiz-container button:hover {
+    background-color: #0056b3;
+}
+
+.results {
+    text-align: center; /* Zarovnání textu na střed */
+    font-size: 20px; /* Zvýšení velikosti písma */
+    line-height: 1.6; /* Lepší čitelnost */
+}
+
+.results h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.results button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.results button:hover {
+    background-color: #0056b3;
 }
