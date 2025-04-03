@@ -272,7 +272,7 @@ const quizData = [
     {
         question: "Kolik je nártních kostí?",
         answers: ["7", "8", "5", "6"],
-        correct: 0
+        correct: 2
     },
     {
         question: "Kolik článků prstů má ruka?",
