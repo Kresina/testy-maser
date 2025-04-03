@@ -10,13 +10,15 @@
     <div class="sidebar">
         <h3>Nastavení testu</h3>
         <div class="input-group">
-            <label for="numQuestions">Počet náhodných otázek:</label>
-            <input id="numQuestions" type="number" value="5" min="1" />
+            <label id="numQuestionsLabel" for="numQuestions">Počet náhodných otázek:</label>
+            <input type="number" id="numQuestions" min="1" max="50">
         </div>
         <button id="generateTest">Vygenerovat test</button>
         <button id="toggleTimer">Spustit test</button>
         <button id="endTest" disabled>Ukončit test</button>
+        <h3>Uplynulý čas</h3>
         <div id="timerDisplay" class="timer-display">00:00</div>
+        <h3>Otázky</h3>
         <div id="questionList"></div>
     </div>
     

@@ -25,7 +25,7 @@ let quizDataSubset = [];
 
 // Funkce pro správné náhodné zamíchání otázek
 function shuffleArray(array) {
-    for(let i = array.length - 1; i > 0; i--) {
+    for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
@@ -82,14 +82,15 @@ function handleAnswer(selectedIndex, button) {
 
     updateSidebar();
 
-    // Zobrazení výsledků po poslední otázce
+    // Zobrazení výsledků po poslední otázce s prodlevou
     if (currentQuestion === quizDataSubset.length - 1) {
         stopTimer(); // Zastavení časovače
         elements.toggleTimer.disabled = true; // Deaktivace tlačítka "Zastavit test"
-        displayResults(); // Zobrazení výsledků
-    } else {
-        currentQuestion++; // Posun na další otázku, pokud existuje
-        loadQuestion(currentQuestion); // Načtení další otázky
+
+        // Po 2 sekundách zobrazit celkové výsledky testu
+        setTimeout(() => {
+            displayResults();
+        }, 2000); // 2 sekundy
     }
 }
 
@@ -102,11 +103,12 @@ function updateSidebar() {
     elements.questionList.innerHTML = "";
     quizDataSubset.forEach((q, index) => {
         const btn = document.createElement("button");
-        btn.textContent = `Q${index + 1}: ${q.question.substring(0, 30)}...`;
-        btn.className = "sidebar-question" + 
-                        (correctQuestions.has(index) ? " correct" : "") + 
-                        (incorrectQuestions.has(index) ? " incorrect" : "") + 
-                        (index === currentQuestion ? " current" : "");
+        btn.textContent = `Q${index + 1}: ${q.question.substring(0, 700)}...`;
+        btn.className =
+            "sidebar-question" +
+            (correctQuestions.has(index) ? " correct" : "") +
+            (incorrectQuestions.has(index) ? " incorrect" : "") +
+            (index === currentQuestion ? " current" : "");
         btn.onclick = () => loadQuestion(index);
         elements.questionList.appendChild(btn);
     });
@@ -115,7 +117,7 @@ function updateSidebar() {
 function startTimer() {
     startTime = Date.now() - elapsedTime;
     clearInterval(testTimer);
-    
+
     testTimer = setInterval(() => {
         elapsedTime = Date.now() - startTime;
         const minutes = Math.floor(elapsedTime / 60000).toString().padStart(2, "0");
@@ -129,14 +131,15 @@ function stopTimer() {
 }
 
 function toggleTimer() {
-    if(isTimerRunning) {
+    if (isTimerRunning) {
         stopTimer();
         toggleQuizVisibility(false);
         elements.toggleTimer.textContent = "Spustit test";
         elements.endTest.disabled = true;
     } else {
         startTimer();
-        toggleQuizVisibility(true);
+        toggleQuizVisibility(true); // Otázky se zobrazí až po spuštění testu
+        loadQuestion(currentQuestion); // Načtení první otázky při spuštění testu
         elements.toggleTimer.textContent = "Zastavit test";
         elements.endTest.disabled = false;
     }
@@ -148,7 +151,6 @@ function displayResults() {
     const correctAnswers = correctQuestions.size;
     const incorrectAnswers = incorrectQuestions.size;
 
-    // Vyčištění oblasti quiz-container a zobrazení výsledků
     elements.quizContainer.innerHTML = `
         <div class="results">
             <h2>Výsledky testu</h2>
@@ -158,36 +160,40 @@ function displayResults() {
         </div>
     `;
 
-    // Přidání funkčnosti pro tlačítko restartu
     document.getElementById("restartTest").onclick = generateTest;
 }
 
 // Hlavní funkce pro generování testu
 function generateTest() {
-    const num = parseInt(elements.numQuestions.value, 10);
-    
-    if(!quizData?.length) {
+    const numQuestionsValue = parseInt(elements.numQuestions.value, 10);
+
+    // Validace vstupu pro počet otázek
+    if (!quizData || quizData.length === 0) {
         alert("Chybí data otázek!");
         return;
     }
-    
-    if(isNaN(num) || num < 1 || num > quizData.length) {
-        alert(`Platný rozsah: 1-${quizData.length}`);
+
+    if (isNaN(numQuestionsValue) || numQuestionsValue <= 0 || numQuestionsValue > quizData.length) {
+        alert(`Zadejte platný počet otázek (1-${quizData.length}).`);
         return;
     }
 
-    // Reset stavu
+    // Reset časovače a stavu aplikace
     stopTimer();
     elapsedTime = 0;
     elements.timerDisplay.textContent = "00:00";
+
+    // Náhodné zamíchání otázek a výběr podmnožiny
     quizDataSubset = [...quizData];
     shuffleArray(quizDataSubset);
-    quizDataSubset = quizDataSubset.slice(0, num);
-    currentQuestion = 0;
-    correctQuestions.clear();
-    incorrectQuestions.clear();
+    quizDataSubset = quizDataSubset.slice(0, numQuestionsValue);
 
-    // Reset UI
+    incorrectQuestions.clear();
+    correctQuestions.clear();
+    score = 0;
+    currentQuestion = 0;
+
+    // Reset oblasti quiz-container pro nový test
     elements.quizContainer.innerHTML = `
         <div id="question"></div>
         <div id="answers"></div>
@@ -197,30 +203,41 @@ function generateTest() {
         </div>
     `;
 
-    // Nové přiřazení elementů
+    // Znovu načtení referencí na DOM prvky
     elements.question = document.getElementById("question");
     elements.answers = document.getElementById("answers");
     elements.prev = document.getElementById("prev");
     elements.next = document.getElementById("next");
 
-    // Nová vazba eventů
-    elements.prev.onclick = () => currentQuestion > 0 && loadQuestion(currentQuestion - 1);
-    elements.next.onclick = () => currentQuestion < quizDataSubset.length - 1 && loadQuestion(currentQuestion + 1);
+    // Připojení funkcí k tlačítkům navigace
+    elements.prev.onclick = () => {
+        if (currentQuestion > 0) {
+            loadQuestion(currentQuestion - 1);
+        }
+    };
 
-    // Inicializace
+    elements.next.onclick = () => {
+        if (currentQuestion < quizDataSubset.length - 1) {
+            loadQuestion(currentQuestion + 1);
+        }
+    };
+
+    // Aktivace tlačítka "Spustit test" a deaktivace tlačítka "Ukončit test"
     elements.toggleTimer.disabled = false;
     elements.toggleTimer.textContent = "Spustit test";
     elements.endTest.disabled = true;
+
+    // Aktualizace sidebaru
     updateSidebar();
-    loadQuestion(0);
+
+    // Skrytí oblasti s otázkami, dokud není test spuštěn
     toggleQuizVisibility(false);
-    
 }
 
 // Inicializace event listenerů
 elements.generateTest.addEventListener("click", generateTest);
 elements.toggleTimer.addEventListener("click", toggleTimer);
 elements.endTest.addEventListener("click", () => {
-    stopTimer(); // Zastavení časovače
-    displayResults(); // Zobrazení výsledků testu
+    stopTimer();
+    displayResults();
 });
